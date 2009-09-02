@@ -2,6 +2,11 @@ from itertools import count
 
 from django.db import models
 
+#for groups support
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
+
+
 from pyvcs.backends import AVAILABLE_BACKENDS, get_backend
 from pyvcs.exceptions import CommitDoesNotExist, FileDoesNotExist, FolderDoesNotExist
 
@@ -9,12 +14,16 @@ from pyvcs.exceptions import CommitDoesNotExist, FileDoesNotExist, FolderDoesNot
 REPOSITORY_TYPES = zip(count(), AVAILABLE_BACKENDS.keys())
 
 class CodeRepository(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length = 255)
     slug = models.SlugField()
 
-    repository_type = models.IntegerField(choices=REPOSITORY_TYPES)
+    repository_type = models.IntegerField(choices = REPOSITORY_TYPES)
 
-    location = models.CharField(max_length=255)
+    location = models.CharField(max_length = 255)
+
+    object_id = models.IntegerField(null = True)
+    content_type = models.ForeignKey(ContentType, null = True)
+    group = generic.GenericForeignKey("object_id", "content_type")
 
     class Meta:
         verbose_name_plural = "Code Repositories"
@@ -39,10 +48,10 @@ class CodeRepository(models.Model):
         except CommitDoesNotExist:
             return None
 
-    def get_recent_commits(self, since=None):
-        return self.repo.get_recent_commits(since=since)
+    def get_recent_commits(self, since = None):
+        return self.repo.get_recent_commits(since = since)
 
-    def get_folder_contents(self, path, rev=None):
+    def get_folder_contents(self, path, rev = None):
         try:
             if rev is not None:
                 rev = str(rev)
@@ -50,7 +59,7 @@ class CodeRepository(models.Model):
         except FolderDoesNotExist:
             return None
 
-    def get_file_contents(self, path, rev=None):
+    def get_file_contents(self, path, rev = None):
         try:
             if rev is not None:
                 rev = str(rev)
