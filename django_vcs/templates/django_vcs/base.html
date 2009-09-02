@@ -1,9 +1,19 @@
-<html>
-    <head>
-        <title>{% block title %}{% endblock %}</title>
-        {% block extra_head %}{% endblock %}
-    </head>
-    <body>
-        {% block content %}{% endblock %}
-    </body>
-</html>
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block body_class %}repositories{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}django_vcs/css/django_vcs.css" />
+{% endblock %}
+
+{% block subnav %}
+    <ul>
+        {% if repo %}
+            <li><a href="{% url code_browser repo.slug "" %} ">{% trans "Browse" %}</a></li>
+            <li><a href="{% url recent_commits repo.slug %}">{% trans "Commits" %}</a></li>
+        {% endif %}
+        <li><a href="{% url repo_list %}">{% trans "All Repositories" %}</a></li>
+    </ul>
+{% endblock %}

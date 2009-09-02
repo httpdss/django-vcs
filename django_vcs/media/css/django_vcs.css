@@ -1,0 +1,39 @@
+.files a[href$='.py'] {
+    display:inline-block;
+    padding:2px 0px 2px 20px;
+    line-height:18px;
+    min-height:18px;
+    overflow:visible;
+    background:transparent url('../../pinax/images/silk/icons/page_white_code.png') center left no-repeat;
+}
+
+.files a[href$='/'] {
+    display:inline-block;
+    padding:2px 0px 2px 20px;
+    line-height:18px;
+    min-height:18px;
+    overflow:visible;
+    background:transparent url('../../pinax/images/silk/icons/folder.png') center left no-repeat;
+}
+
+.files a[href$='.txt'] {
+    display:inline-block;
+    padding:2px 0px 2px 20px;
+    line-height:18px;
+    min-height:18px;
+    overflow:visible;
+    background:transparent url('../../pinax/images/silk/icons/page_white_text.png') center left no-repeat;
+}
+
+.files a[href$='.in'] {
+    display:inline-block;
+    padding:2px 0px 2px 20px;
+    line-height:18px;
+    min-height:18px;
+    overflow:visible;
+    background:transparent url('../../pinax/images/silk/icons/page_white.png') center left no-repeat;
+}
+
+ul.files li {
+    list-style-type:none;
+}

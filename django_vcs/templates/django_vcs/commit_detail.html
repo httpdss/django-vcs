@@ -1,8 +1,9 @@
 {% extends "django_vcs/base.html" %}
 
+{% load i18n %}
 {% load udiff %}
 
-{% block title %}
+{% block head_title %}
     Details about commit {{ commit.commit_id }} on {{ repo.name }}
 {% endblock %}
 
@@ -10,15 +11,15 @@
     {% diff_css %}
 {% endblock %}
 
-{% block content %}
+{% block body %}
     <h1>
         Details about commit {{ commit.commit_id }} on {{ repo.name }}
     </h1>
     <ul>
-        <li>Committed by: {{ commit.author }}</li>
-        <li>Committed at: {{ commit.time }}</li>
-        <li>Commit message: {{ commit.message }}</li>
-        <li>Affected files:
+        <li>{% trans "Committed by" %}: {{ commit.author }}</li>
+        <li>{% trans "Committed at" %}: {{ commit.time }}</li>
+        <li>{% trans "Commit message" %}: {{ commit.message }}</li>
+        <li>{% trans "Affected files" %}:
             <ul>
                 {% for file in commit.files %}
                     <li>

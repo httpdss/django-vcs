@@ -2,7 +2,7 @@
 
 {% load highlight %}
 
-{% block title %}
+{% block head_title %}
     {{ path }} in {{ repo.name }}
 {% endblock %}
 
@@ -12,7 +12,7 @@
     </style>
 {% endblock %}
 
-{% block content %}
+{% block body %}
     <h1>
         Contents of {{ path }}
     </h1>
