@@ -7,14 +7,16 @@
 {% endblock %}
 
 {% block extra_head %}
+    {{ block.super }}
     <style type="text/css">
         {% highlight_css %}
     </style>
 {% endblock %}
 
 {% block body %}
-    <h1>
-        Contents of {{ path }}
-    </h1>
-    {{ file|highlight:path }}
+    <h2>Contents of {{ path }}</h2>
+    <div id="paste">
+        {{ file|highlight:path }}
+    </div>
+    
 {% endblock %}

@@ -7,14 +7,10 @@
     Details about commit {{ commit.commit_id }} on {{ repo.name }}
 {% endblock %}
 
-{% block extra_head %}
-    {% diff_css %}
-{% endblock %}
-
 {% block body %}
-    <h1>
+    <h2>
         Details about commit {{ commit.commit_id }} on {{ repo.name }}
-    </h1>
+    </h2>
     <ul>
         <li>{% trans "Committed by" %}: {{ commit.author }}</li>
         <li>{% trans "Committed at" %}: {{ commit.time }}</li>
