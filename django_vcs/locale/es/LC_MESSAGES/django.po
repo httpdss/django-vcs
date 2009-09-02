@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-02 14:14-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: templates/django_vcs/base.html:14
+msgid "Browse"
+msgstr "Navegar"
+
+#: templates/django_vcs/base.html:15
+msgid "Commits"
+msgstr "Commits"
+
+#: templates/django_vcs/base.html:17
+msgid "All Repositories"
+msgstr "Todos los Repositorios"
+
+#: templates/django_vcs/commit_detail.html:19
+msgid "Committed by"
+msgstr "Commiteado por"
+
+#: templates/django_vcs/commit_detail.html:20
+msgid "Committed at"
+msgstr "Commiteado en"
+
+#: templates/django_vcs/commit_detail.html:21
+msgid "Commit message"
+msgstr "Mensaje de commit"
+
+#: templates/django_vcs/commit_detail.html:22
+msgid "Affected files"
+msgstr "Archivos afectados"
+
+#: templates/django_vcs/folder_contents.html:6
+msgid "in"
+msgstr "en"
+
+#: templates/django_vcs/folder_contents.html:10
+msgid "Content of"
+msgstr "Contenido de"
+
+#: templates/django_vcs/recent_commits.html:6
+#: templates/django_vcs/recent_commits.html:10
+msgid "Recent commits for"
+msgstr "Commits recientes para"
+
