@@ -30,7 +30,6 @@ def repo_list(request, group_slug = None, bridge = None):
     group -- group association to the repository
     bridge -- 
 
-    
     """
 
     if bridge is not None:
@@ -42,12 +41,16 @@ def repo_list(request, group_slug = None, bridge = None):
         group = None
 
     if group:
+        group_base = bridge.group_base_template()
         repos = group.content_objects(CodeRepository)
     else:
+        group_base = None
         repos = CodeRepository.objects.all()
 
     return render_to_response('django_vcs/repo_list.html',
-                              { 'group':group, 'repos': repos },
+                              {'group':group,
+                               'group_base':group_base,
+                               'repos': repos },
                               context_instance = RequestContext(request))
 
 @login_required
@@ -128,16 +131,18 @@ def recent_commits(request, slug, group_slug = None, bridge = None):
         group = None
 
     if group:
+        group_base = bridge.group_base_template()
         repos = group.content_objects(CodeRepository)
     else:
         repos = CodeRepository.objects.filter(object_id = None)
+        group_base = None
 
     repo = get_object_or_404(repos, slug = slug)
     commits = repo.get_recent_commits()
     return render_to_response([
         'django_vcs/%s/recent_commits.html' % repo.name,
         'django_vcs/recent_commits.html',
-    ], {'group':group, 'repo': repo, 'commits': commits}, context_instance = RequestContext(request))
+    ], {'group':group, 'group_base':group_base, 'repo': repo, 'commits': commits}, context_instance = RequestContext(request))
 
 @login_required
 def code_browser(request, slug, path, group_slug = None, bridge = None):
@@ -150,7 +155,7 @@ def code_browser(request, slug, path, group_slug = None, bridge = None):
     bridge -- 
         
     """
-    
+
     if bridge is not None:
         try:
             group = bridge.get_group(group_slug)
@@ -160,10 +165,12 @@ def code_browser(request, slug, path, group_slug = None, bridge = None):
         group = None
 
     if group:
+        group_base = bridge.group_base_template()
         repos = group.content_objects(CodeRepository)
     else:
+        group_base = None
         repos = CodeRepository.objects.filter(object_id = None)
-        
+
     repo = get_object_or_404(repos, slug = slug)
     rev = request.GET.get('rev') or None
     context = {'repo': repo, 'path': path}
@@ -182,6 +189,7 @@ def code_browser(request, slug, path, group_slug = None, bridge = None):
         ], context, context_instance = RequestContext(request))
     context['file'] = file_contents
     context['group'] = group
+    context['group_base'] = group_base
     return render_to_response([
         'django_vcs/%s/file_contents.html' % repo.name,
         'django_vcs/file_contents.html',
@@ -197,7 +205,7 @@ def commit_detail(request, slug, commit_id, group_slug = None, bridge = None):
     bridge -- 
     
     """
-    
+
     if bridge is not None:
         try:
             group = bridge.get_group(group_slug)
@@ -207,16 +215,23 @@ def commit_detail(request, slug, commit_id, group_slug = None, bridge = None):
         group = None
 
     if group:
+        group_base = bridge.group_base_template()
         repos = group.content_objects(CodeRepository)
     else:
+        group_base = None
         repos = CodeRepository.objects.filter(object_id = None)
-        
+
     repo = get_object_or_404(repos, slug = slug)
-    
+
     commit = repo.get_commit(commit_id)
     if commit is None:
         raise Http404
     return render_to_response([
         'django_vcs/%s/commit_detail.html' % repo.name,
         'django_vcs/commit_detail.html',
-    ], {'group':group, 'repo': repo, 'commit': commit}, context_instance = RequestContext(request))
+    ],
+    {'group':group,
+     'group_base':group_base,
+     'repo': repo,
+     'commit': commit},
+     context_instance = RequestContext(request))

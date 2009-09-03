@@ -43,6 +43,9 @@ class CodeRepository(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.get_repository_type_display(), self.name)
 
+    def save(self, force_insert=False, force_update=False):
+        super(CodeRepository, self).save(force_insert, force_update)
+        
     @models.permalink
     def get_absolute_url(self, group = None):
         kwargs = {"slug": self.slug}

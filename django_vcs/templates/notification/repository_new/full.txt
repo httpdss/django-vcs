@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if group %}
+    {% blocktrans %}{{ creator }} has added a repository '{{ repo }}' in '{{ group }}'.{% endblocktrans %}
+{% else %}
+    {% blocktrans %}{{ creator }} has added a repository '{{ repo }}'.{% endblocktrans %}
+{% endif %}
+
+Link: http://{{ current_site }}{{ repo.get_absolute_url }}

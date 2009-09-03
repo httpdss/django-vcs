@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% url profile_detail username=creator.username as creator_url %}
+
+{% if group %}
+{% blocktrans with repo.get_absolute_url as repo_url and group.get_absolute_url as group_url %}<a href="{{ creator_url }}">{{ creator }}</a> has added a repository '<a href="{{ repo_url }}">{{ repo }}</a>' in '<a href="{{ group_url }}">{{ group }}</a>'.{% endblocktrans %}
+{% else %}
+{% blocktrans with repo.get_absolute_url as repo_url %}<a href="{{ creator_url }}">{{ creator }}</a> has added a repository '<a href="{{ repo_url }}">{{ repo }}</a>'.{% endblocktrans %}
+{% endif %}
