@@ -1,15 +1,26 @@
 from itertools import count
 
 from django.db import models
+from django.conf import settings
 
 #for groups support
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+
+from django.contrib.auth.models import User
+
+from django.utils.translation import ugettext_lazy as _
+
 
 
 from pyvcs.backends import AVAILABLE_BACKENDS, get_backend
 from pyvcs.exceptions import CommitDoesNotExist, FileDoesNotExist, FolderDoesNotExist
 
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
 
 REPOSITORY_TYPES = zip(count(), AVAILABLE_BACKENDS.keys())
 
@@ -21,6 +32,7 @@ class CodeRepository(models.Model):
 
     location = models.CharField(max_length = 255)
 
+    creator = models.ForeignKey(User, related_name = "created_repositories", verbose_name = _('creator'))
     object_id = models.IntegerField(null = True)
     content_type = models.ForeignKey(ContentType, null = True)
     group = generic.GenericForeignKey("object_id", "content_type")
@@ -32,8 +44,11 @@ class CodeRepository(models.Model):
         return "%s: %s" % (self.get_repository_type_display(), self.name)
 
     @models.permalink
-    def get_absolute_url(self):
-        return ('recent_commits', (), {'slug': self.slug})
+    def get_absolute_url(self, group = None):
+        kwargs = {"slug": self.slug}
+        if group:
+            return group.content_bridge.reverse("recent_commits", group, kwargs)
+        return reverse("recent_commits", kwargs = kwargs)
 
     @property
     def repo(self):

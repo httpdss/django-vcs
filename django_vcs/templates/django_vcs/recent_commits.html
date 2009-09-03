@@ -1,6 +1,7 @@
 {% extends "django_vcs/base.html" %}
 
 {% load i18n %}
+{% load group_tags %}
 
 {% block head_title %}
     {% trans "Recent commits for" %} {{ repo.name }}
@@ -12,15 +13,15 @@
         {% for commit in commits %}
             <div class="commit_block">
                 <dl>
-                    <dt>{{ commit.message }}</dt>
+                    <dt>{{ commit.message|truncatewords:10 }}</dt>
                     <dd>
                         <div>
-                            <a href="{% url commit_detail slug=repo.slug commit_id=commit.commit_id %}">
+                            <a href="{% groupurl commit_detail group slug=repo.slug commit_id=commit.commit_id  %}">
                                 {{ commit.commit_id }}
                             </a>
                         </div>
                         <div>
-                            <i>{{ commit.author }}</i> {{ commit.item }}
+                            <em>{{ commit.author }}</em> {{ commit.item }}
                         </div>
                     </dd>
 

@@ -1,6 +1,7 @@
 {% extends "django_vcs/base.html" %}
 
 {% load i18n %}
+{% load group_tags %}
 
 {% block head_title %}
 	{{ path }} {% trans "in" %} {{ repo.name }}
@@ -11,14 +12,14 @@
     <ul class="files">
         {% for path, folder in folders %}
             <li>
-                <a href="{% url code_browser slug=repo.slug path=path %}/">
+                <a href="{% groupurl code_browser group slug=repo.slug path=path %}/">
                     {{ folder }}
                 </a>
             </li>
         {% endfor %}
         {% for path, file in files %}
             <li>
-                <a href="{% url code_browser slug=repo.slug path=path %}">
+                <a href="{% groupurl code_browser group slug=repo.slug path=path %}">
                     {{ file }}
                 </a>
             </li>

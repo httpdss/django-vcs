@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
+{% load group_tags %}
 
 {% block body_class %}repositories{% endblock %}
 
@@ -12,9 +13,10 @@
 {% block subnav %}
     <ul>
         {% if repo %}
-            <li><a href="{% url code_browser repo.slug "" %} ">{% trans "Browse" %}</a></li>
-            <li><a href="{% url recent_commits repo.slug %}">{% trans "Commits" %}</a></li>
+            <li><a href="{% groupurl code_browser group slug=repo.slug path="" %} ">{% trans "Browse" %}</a></li>
+            <li><a href="{% groupurl recent_commits group slug=repo.slug %}">{% trans "Commits" %}</a></li>
         {% endif %}
-        <li><a href="{% url repo_list %}">{% trans "All Repositories" %}</a></li>
+        <li><a href="{% groupurl add_repo group %}">{% trans "Add Repository" %}</a></li>
+        <li><a href="{% groupurl repo_list group %}">{% trans "All Repositories" %}</a></li>
     </ul>
 {% endblock %}

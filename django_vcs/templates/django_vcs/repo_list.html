@@ -1,6 +1,7 @@
 {% extends "django_vcs/base.html" %}
 
 {% load i18n %}
+{% load group_tags %}
 
 {% block head_title %}Repository List{% endblock %}
 
@@ -9,7 +10,7 @@
         <dl class="repo_list">
         {% for repo in repos %}
             <dt>
-                <a href="{{ repo.get_absolute_url }}">{{ repo.name }}</a>
+                <a href="{% groupurl recent_commits group slug=repo.slug %}">{{ repo.name }}</a>
             </dt>
             <dd>
                 {% with repo.get_recent_commits.0 as commit %}
