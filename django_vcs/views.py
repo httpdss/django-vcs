@@ -27,6 +27,9 @@ def repo_list(request, group_slug = None, bridge = None):
     """List of repositories 
     
     List of repositories taking into account that its has to be group-aware
+    group -- group association to the repository
+    bridge -- 
+
     
     """
 
@@ -111,6 +114,8 @@ def recent_commits(request, slug, group_slug = None, bridge = None):
     
     Keyword Arguments:
     slug -- the repository slug
+    group -- group association to the repository
+    bridge -- 
     
     """
 
@@ -141,6 +146,8 @@ def code_browser(request, slug, path, group_slug = None, bridge = None):
     Keyword Arguments:
     slug -- the repository slug
     path -- path inside the repository
+    group -- group association to the repository
+    bridge -- 
         
     """
     
@@ -186,6 +193,8 @@ def commit_detail(request, slug, commit_id, group_slug = None, bridge = None):
         
     slug -- the repository slug
     commit_id -- identifier of the commit
+    group -- group association to the repository
+    bridge -- 
     
     """
     
