@@ -36,6 +36,8 @@ class CodeRepository(models.Model):
     object_id = models.IntegerField(null = True)
     content_type = models.ForeignKey(ContentType, null = True)
     group = generic.GenericForeignKey("object_id", "content_type")
+    
+    fields = ('name','slug','repository_type','location','creator')
 
     class Meta:
         verbose_name_plural = "Code Repositories"

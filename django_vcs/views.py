@@ -83,7 +83,8 @@ def add_repo(request, group_slug = None, form_class = RepositoryForm, template_n
             if repository_form.is_valid():
                 repo = repository_form.save(commit = False)
                 repo.creator = request.user
-                repo.group = group
+                if group:
+                    group.associate(repo)
                 repo.save()
                 request.user.message_set.create(message = "added repository '%s'" % repo.name)
                 if notification:
