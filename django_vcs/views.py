@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.http import HttpResponseRedirect, Http404
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import get_app
@@ -23,6 +22,7 @@ try:
 except ImproperlyConfigured:
     notification = None
 
+@login_required
 def repo_list(request, group_slug = None, bridge = None):
     """List of repositories 
     
@@ -49,7 +49,7 @@ def repo_list(request, group_slug = None, bridge = None):
 
 @login_required
 def add_repo(request, group_slug = None, form_class = RepositoryForm, template_name = "django_vcs/add.html", bridge = None):
-    """add a new repository to the list"""
+    """Add a new repository to a group or to the whole list"""
     if bridge:
         try:
             group = bridge.get_group(group_slug)
@@ -105,6 +105,7 @@ def add_repo(request, group_slug = None, form_class = RepositoryForm, template_n
         "group_base": group_base,
     }, context_instance = RequestContext(request))
 
+@login_required
 def recent_commits(request, slug, group_slug = None, bridge = None):
     """List of recent commits from a given repository
     
@@ -133,6 +134,7 @@ def recent_commits(request, slug, group_slug = None, bridge = None):
         'django_vcs/recent_commits.html',
     ], {'group':group, 'repo': repo, 'commits': commits}, context_instance = RequestContext(request))
 
+@login_required
 def code_browser(request, slug, path, group_slug = None, bridge = None):
     """Source code browser for a given repository
         
@@ -178,6 +180,7 @@ def code_browser(request, slug, path, group_slug = None, bridge = None):
         'django_vcs/file_contents.html',
     ], context, context_instance = RequestContext(request))
 
+@login_required
 def commit_detail(request, slug, commit_id, group_slug = None, bridge = None):
     """Get details for a given commit
         
