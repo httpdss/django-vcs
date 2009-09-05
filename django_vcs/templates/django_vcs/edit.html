@@ -1,0 +1,36 @@
+{% extends "django_vcs/base.html" %}
+
+{% load i18n %}
+{% load uni_form %}
+{% load group_tags %}
+
+{% block head_title %}{% trans "Edit Repository" %}{% endblock %}
+
+{% block body %}
+    <h1>{% trans "Edit Repository" %}</h1>
+
+    {% if is_member %}
+
+         <div class="main-form">
+            <form method="POST" action="" id="repository_form" class="uniForm">
+                <div class="form_block">
+                    {{ form.media }}
+                    {{ form|as_uni_form }}
+                    <input type="submit" value="{% trans 'Edit repository' %}"/>
+                </div>
+            </form>
+        </div>
+
+    {% else %}
+        <p>{% trans 'You are not a member and so cannot edit the repository.' %}</p>
+    {% endif %}
+
+{% endblock %}
+
+{% block extra_body %}
+    <script type="text/javascript">
+        $().ready(function() {
+            $('#id_name').focus();
+        });
+    </script>
+{% endblock %}

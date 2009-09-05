@@ -15,7 +15,7 @@ from django.db.models import get_app
 from django.core.urlresolvers import reverse
 
 from django_vcs.models import CodeRepository
-from django_vcs.forms import RepositoryForm
+from django_vcs.forms import RepositoryForm, EditRepositoryForm
 
 try:
     notification = get_app('notification')
@@ -45,7 +45,8 @@ def repo_list(request, group_slug = None, bridge = None):
         repos = group.content_objects(CodeRepository)
     else:
         group_base = None
-        repos = CodeRepository.objects.all()
+        #dont list repositories that belong to a group
+        repos = CodeRepository.objects.filter(content_type = None)
 
     return render_to_response('django_vcs/repo_list.html',
                               {'group':group,
@@ -54,7 +55,7 @@ def repo_list(request, group_slug = None, bridge = None):
                               context_instance = RequestContext(request))
 
 @login_required
-def add_repo(request, group_slug = None, form_class = RepositoryForm, template_name = "django_vcs/add.html", bridge = None):
+def repo_add(request, group_slug = None, form_class = RepositoryForm, template_name = "django_vcs/add.html", bridge = None):
     """Add a new repository to a group or to the whole list"""
     if bridge:
         try:
@@ -109,6 +110,98 @@ def add_repo(request, group_slug = None, form_class = RepositoryForm, template_n
         "group": group,
         "is_member": is_member,
         "repository_form": repository_form,
+        "group_base": group_base,
+    }, context_instance = RequestContext(request))
+
+
+def repo_delete(request, slug, group_slug = None, bridge = None):
+
+    if bridge:
+        try:
+            group = bridge.get_group(group_slug)
+        except ObjectDoesNotExist:
+            raise Http404
+    else:
+        group = None
+
+    if group:
+        group_base = bridge.group_base_template()
+        repos = group.content_objects(CodeRepository)
+    else:
+        repos = CodeRepository.objects.filter(object_id = None)
+        group_base = None
+
+    repo = get_object_or_404(repos, slug = slug)
+
+    repo_name = repo.name
+
+    if group:
+        redirect_to = bridge.reverse("repo_list", group)
+    else:
+        redirect_to = reverse("repo_list")
+
+    if repo.creator != request.user:
+        request.user.message_set.create(message = "You can't delete repositories that aren't yours")
+        return HttpResponseRedirect(redirect_to)
+
+    repo.delete()
+    request.user.message_set.create(message = "Successfully deleted repository '%s'" % repo_name)
+
+    return HttpResponseRedirect(redirect_to)
+
+
+def repo_edit(request, slug,
+              form_class = EditRepositoryForm,
+              template_name = "django_vcs/edit.html",
+              group_slug = None, bridge = None):
+
+    if bridge:
+        try:
+            group = bridge.get_group(group_slug)
+        except ObjectDoesNotExist:
+            raise Http404
+    else:
+        group = None
+
+    if group:
+        group_base = bridge.group_base_template()
+        repos = group.content_objects(CodeRepository)
+    else:
+        repos = CodeRepository.objects.filter(object_id = None)
+        group_base = None
+
+    if not request.user.is_authenticated():
+        is_member = False
+    else:
+        if group:
+            is_member = group.user_is_member(request.user)
+        else:
+            is_member = True
+
+    repo = get_object_or_404(repos, slug = slug)
+
+    if group:
+        redirect_to = bridge.reverse("repo_list", group)
+    else:
+        redirect_to = reverse("repo_list")
+
+#    if repo.creator != request.user:
+#        request.user.message_set.create(message = "You can't edit repositories that aren't yours")
+#        return HttpResponseRedirect(redirect_to)
+
+    if is_member and request.method == "POST":
+        form = form_class(request.user, group, request.POST, instance = repo)
+        if form.is_valid():
+            repo = form.save()
+            request.user.message_set.create(message = "Repository has been updated succesfully")
+            return HttpResponseRedirect(redirect_to)
+    else:
+        form = form_class(request.user, group, instance = repo)
+
+    return render_to_response(template_name, {
+        "group": group,
+        "is_member": is_member,
+        "form": form,
         "group_base": group_base,
     }, context_instance = RequestContext(request))
 

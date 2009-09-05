@@ -2,8 +2,9 @@
 
 {% load i18n %}
 {% load group_tags %}
+{% load theme_tags %}
 
-{% block head_title %}Repository List{% endblock %}
+{% block head_title %}{% trans "Repository List" %}{% endblock %}
 
 {% block body %}
         <h1>{% trans "Repositories" %}</h1>
@@ -18,7 +19,11 @@
                     <div class="time">{{ commit.time }}</div>
                 {% endwith %}
                 <div class="type">{{ repo.get_repository_type_display }}</div>
-                
+
+                <div>
+                    <a href="{% groupurl repo_edit group slug=repo.slug %}">{% silk "pencil" %}</a>
+                    <a href="{% groupurl repo_delete group slug=repo.slug %}">{% silk "delete" %}</a>
+                </div>
             </dd>
         {% endfor %}
         </dl>

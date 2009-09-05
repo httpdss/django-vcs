@@ -8,7 +8,9 @@ from django.utils.translation import ugettext as _
 from django_vcs.models import CodeRepository
 
 class RepositoryForm(forms.ModelForm):
-    """Add new repository form"""
+    """Form for adding a new repository
+    
+    """
     def __init__(self, user, group, *args, **kwargs):
         self.user = user
         self.group = group
@@ -30,3 +32,22 @@ class RepositoryForm(forms.ModelForm):
         group = self.group
         if group and not self.group.user_is_member(self.user):
             raise forms.ValidationError(_("You must be a member to create tasks"))
+
+
+class EditRepositoryForm(forms.ModelForm):
+    """Form for editing a repository
+     
+    """
+    
+    
+    def __init__(self, user, group, *args, **kwargs):
+        self.user = user
+        self.group = group
+        
+        super(EditRepositoryForm, self).__init__(*args, **kwargs)
+    
+    def save(self, commit=False):
+        return super(EditRepositoryForm, self).save(True)
+        
+    class Meta(RepositoryForm.Meta):
+        fields = ('name', 'slug', 'repository_type', 'location')

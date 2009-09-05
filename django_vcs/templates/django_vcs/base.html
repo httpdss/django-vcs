@@ -16,7 +16,7 @@
             <li><a href="{% groupurl code_browser group slug=repo.slug path="" %} ">{% trans "Browse" %}</a></li>
             <li><a href="{% groupurl recent_commits group slug=repo.slug %}">{% trans "Commits" %}</a></li>
         {% endif %}
-        <li><a href="{% groupurl add_repo group %}">{% trans "Add Repository" %}</a></li>
+        <li><a href="{% groupurl repo_add group %}">{% trans "Add Repository" %}</a></li>
         <li><a href="{% groupurl repo_list group %}">{% trans "All Repositories" %}</a></li>
     </ul>
 {% endblock %}

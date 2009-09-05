@@ -1,0 +1,55 @@
+Integrate to code_project
+=========================
+
+The purpose of this section is to explain how to integrate django_vcs to a code_project clone.
+This assumes the following:
+
+#. you have a cloned project ready to setup
+#. vcs can belong to a group or not.
+#. you are only using git vcs
+#. you use pip to install packages
+
+Modifications to the cloned project
+-----------------------------------
+
+requirements.txt
+~~~~~~~~~~~~~~~~
+Add the following lines to this file in order to cover all project dependencies:
+
+    -e git+git://github.com/httpdss/django-vcs.git#egg=django-vcs
+    -e git+git://github.com/jelmer/dulwich.git#egg=dulwich
+
+
+urls.py
+~~~~~~~
+Add the following line to your *urlpatterns* to be able to manage vcs' without a group
+
+    (r'^repositories/', include('django_vcs.urls')),
+
+settings.py
+~~~~~~~~~~~
+Add *django_vcs* to your INSTALLED_APPS
+
+templates/site_base.html
+~~~~~~~~~~~~~~~~~~~~~~~~
+Add the *Repositories* tab to your project:
+
+    <li id="tab_repositories"><a href="{% url repo_list %}">{% trans "Repositories" %}</a></li>
+
+templates/projects/
+~~~~~~~~~~~~~~~~~~~
+In order to fully integrate django_vcs with *projects* app provided by Pinax, you need to copy
+the projects template folder found under pinax/templates/default/projects into your templates folder.
+
+Once this is done modify your recently copied *templates/projects/project.html*:
+    
+    <h2>{% trans "Repositories" %}</h2>
+    
+    {% groupurl repo_list project as repos_url %}
+    <p><a href="{{ repos_url }}">repository list</a></p>
+    
+And finally modify *templates/projects/content_base.html* to add the repository item to the menu:
+
+    <li><a href="{% groupurl repo_list group %}">Repositories</a></li>
+
+That's It! 
