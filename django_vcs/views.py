@@ -81,7 +81,7 @@ def repo_add(request, group_slug = None, form_class = RepositoryForm, template_n
     if request.method == "POST":
         if request.user.is_authenticated():
             form = form_class(request.user, group, request.POST)
-            if repository_form.is_valid():
+            if form.is_valid():
                 repo = form.save(commit = False)
                 repo.creator = request.user
                 if group:
