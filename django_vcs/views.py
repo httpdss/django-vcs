@@ -80,9 +80,9 @@ def repo_add(request, group_slug = None, form_class = RepositoryForm, template_n
 
     if request.method == "POST":
         if request.user.is_authenticated():
-            repository_form = form_class(request.user, group, request.POST)
+            form = form_class(request.user, group, request.POST)
             if repository_form.is_valid():
-                repo = repository_form.save(commit = False)
+                repo = form.save(commit = False)
                 repo.creator = request.user
                 if group:
                     group.associate(repo)
@@ -104,12 +104,12 @@ def repo_add(request, group_slug = None, form_class = RepositoryForm, template_n
                     redirect_to = reverse("repo_list")
                 return HttpResponseRedirect(redirect_to)
     else:
-        repository_form = form_class(request.user, group)
+        form = form_class(request.user, group)
 
     return render_to_response(template_name, {
         "group": group,
         "is_member": is_member,
-        "repository_form": repository_form,
+        "form": form,
         "group_base": group_base,
     }, context_instance = RequestContext(request))
 
@@ -185,10 +185,7 @@ def repo_edit(request, slug,
     else:
         redirect_to = reverse("repo_list")
 
-#    if repo.creator != request.user:
-#        request.user.message_set.create(message = "You can't edit repositories that aren't yours")
-#        return HttpResponseRedirect(redirect_to)
-
+    # allow repository edit for members of the group
     if is_member and request.method == "POST":
         form = form_class(request.user, group, request.POST, instance = repo)
         if form.is_valid():
@@ -213,7 +210,7 @@ def recent_commits(request, slug, group_slug = None, bridge = None):
     slug -- the repository slug
     group -- group association to the repository
     bridge -- 
-    
+
     """
 
     if bridge is not None:
@@ -236,7 +233,11 @@ def recent_commits(request, slug, group_slug = None, bridge = None):
     return render_to_response([
         'django_vcs/%s/recent_commits.html' % repo.name,
         'django_vcs/recent_commits.html',
-    ], {'group':group, 'group_base':group_base, 'repo': repo, 'commits': commits}, context_instance = RequestContext(request))
+    ], {'group':group, 
+        'group_base':group_base, 
+        'repo': repo, 
+        'commits': commits}, 
+        context_instance = RequestContext(request))
 
 @login_required
 def code_browser(request, slug, path, group_slug = None, bridge = None):

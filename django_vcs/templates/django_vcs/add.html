@@ -14,8 +14,8 @@
          <div class="main-form">
             <form method="POST" action="" id="repository_form" class="uniForm">
                 <div class="form_block">
-                    {{ repository_form.media }}
-                    {{ repository_form|as_uni_form }}
+                    {{ form.media }}
+                    {{ form|as_uni_form }}
                     <input type="submit" value="{% trans 'Add repository' %}"/>
                 </div>
             </form>
